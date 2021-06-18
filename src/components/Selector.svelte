@@ -3,8 +3,8 @@
 
     let dispatch = createEventDispatcher()
 
-    let fixed: Array<string> = ["uncle", "range"]
-    let options: Array<string> = ["see", "translate", "gutter"]
+    export let fixed: [string, string];
+    export let options: [string, string, string];
     let choices = [-1, -1]
         
     let draggedIndex = null
@@ -90,7 +90,12 @@
 </div>
 
 <button 
-    on:click={()=>{dispatch("select", { choices: choices })}}
+    on:click={()=>{
+        console.log("hola")
+        dispatch("select", { choices: choices.slice() });
+        choices = [-1, -1];
+        console.log("setting choices to nothing at all")
+    }}
     disabled={
         choices.reduce((prev, curr) => {
             if (curr === -1) prev--
