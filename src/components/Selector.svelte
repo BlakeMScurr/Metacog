@@ -91,10 +91,8 @@
 
 <button 
     on:click={()=>{
-        console.log("hola")
         dispatch("select", { choices: choices.slice() });
         choices = [-1, -1];
-        console.log("setting choices to nothing at all")
     }}
     disabled={
         choices.reduce((prev, curr) => {

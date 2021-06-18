@@ -133,7 +133,6 @@ burned: ${balances.burned}`
 
     // interpret determines what kind of a result one gets from a round based on the pairings provided
     private interpret(selection: wordPair, guess: wordPair):roundResult {
-        console.log(selection, guess)
         if (selection[0] === guess[0] && selection[1] === guess[1]) return roundResult.agreement;
         if (selection[0] !== guess[0] && selection[1] !== guess[1]) return roundResult.bungle;
         return roundResult.bungle;
