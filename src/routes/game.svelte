@@ -21,13 +21,15 @@
 
     let game = new Game(["Blake", "Jordana"]);
     let roundOutcome: [string, (fixed: [string, string], options: [string, string, string]) => string] = ["", ()=>{return ""}]
+    let pairingsExplanation = ""
 
     function onSelect(event) {
         roundOutcome = game.play(event.detail.choices)
+        pairingsExplanation = roundOutcome[1](fixed, options)
+        game = game;
         if (game.getState() === state.ASelect || game.getState() === state.BSelect) {
             randomiseWords()
         }
-        game = game;
     }
 </script>
 
@@ -37,6 +39,6 @@
 <br>
 { roundOutcome[0] }
 <br>
-{ roundOutcome[1](fixed, options) }
+{ pairingsExplanation }
 
 <Selector {fixed} {options} on:select={onSelect}></Selector>
