@@ -23,7 +23,6 @@ export class Game {
 
     private playerNames: [string, string];
     private lastPair: wordPair;
-    private lastRoundResult: roundResult;
     
     constructor(playerNames: [string, string]) {
         this.state = state.ASelect;
@@ -34,17 +33,17 @@ export class Game {
         this.playerNames = playerNames;
     }
     
-    play(pair: wordPair):string {
+    play(pair: wordPair):[string, (fixed: [string, string], options: [string, string, string]) => string] {
         let result
         switch(this.state) {
             case state.ASelect:
                 this.lastPair = pair
                 this.state = state.BGuess
-                return ""
+                return ["", ()=>{return ""}]
             case state.BSelect:
                 this.lastPair = pair
                 this.state = state.AGuess
-                return ""
+                return ["", ()=>{return ""}]
             case state.AGuess:
                 result = this.interpret(pair, this.lastPair)
                 this.coinsInPot -= 2
@@ -53,14 +52,14 @@ export class Game {
                     this.coinsInPileB++
                 }
                 if (result === roundResult.bamboozle) {
-                    this.coinsInPileB++
+                    this.coinsInPileB += 2
                 }
                 if (this.coinsInPot === 0) {
                     this.state = state.Complete
                 } else {
                     this.state = state.ASelect
                 }
-                return this.roundOutcome(result, true)
+                return [this.roundOutcome(result, true), this.explain(this.lastPair, pair)]
             case state.BGuess:
                 result = this.interpret(pair, this.lastPair)
                 this.coinsInPot -= 2
@@ -69,16 +68,23 @@ export class Game {
                     this.coinsInPileB++
                 }
                 if (result === roundResult.bamboozle) {
-                    this.coinsInPileA++
+                    this.coinsInPileA += 2
                 }
                 if (this.coinsInPot === 0) {
                     this.state = state.Complete
                 } else {
                     this.state = state.BSelect
                 }
-                return this.roundOutcome(result, false)
+                return [this.roundOutcome(result, false), this.explain(this.lastPair, pair)]
             case state.Complete:
                 throw new Error("you can play a game that's already completed")
+        }
+    }
+
+    explain(pairA: wordPair, pairB: wordPair) {
+        return (fixed: [string, string], options: [string, string, string]):string => {
+            return `${this.playerNames[0]} chose (${fixed[0]}, ${options[pairA[0]]}) and (${fixed[1]}, ${options[pairA[1]]}). 
+            ${this.playerNames[1]} chose (${fixed[0]}, ${options[pairB[0]]}) and (${fixed[1]}, ${options[pairB[1]]})`
         }
     }
 
@@ -99,7 +105,11 @@ export class Game {
         }
     }
 
-    getState():string {
+    getState():state {
+        return this.state
+    }
+
+    describeState():string {
         switch (this.state) {
             case state.ASelect:
                 return `${this.playerNames[0]}'s turn to select`
@@ -113,6 +123,7 @@ export class Game {
                 return `game over man`
         }
     }
+
 
     balances():{a: number, b: number, pot: number, burned: number} {
         return {
@@ -135,7 +146,7 @@ burned: ${balances.burned}`
     private interpret(selection: wordPair, guess: wordPair):roundResult {
         if (selection[0] === guess[0] && selection[1] === guess[1]) return roundResult.agreement;
         if (selection[0] !== guess[0] && selection[1] !== guess[1]) return roundResult.bungle;
-        return roundResult.bungle;
+        return roundResult.bamboozle;
     }
 }
 
@@ -156,7 +167,7 @@ export class wordPair {
     }
 }
 
-enum state {
+export enum state {
     ASelect = 1,
     BSelect,
     AGuess,
