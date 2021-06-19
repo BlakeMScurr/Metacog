@@ -14,7 +14,6 @@
         fixed[1] = adjectives.default[Math.floor(Math.random() * adjectives.default.length)]
         fixed = fixed
         options = options
-        console.log(fixed, options)
     }
 
     randomiseWords()
