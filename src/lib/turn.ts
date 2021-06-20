@@ -18,9 +18,17 @@ export class wordSelectTurn implements turn {
     options: [number, number, number];
 
     constructor(fixed: [number, number], options: [number, number, number]) {
+        // check that these are valid indices for our wordlist
         if (fixed[0] === fixed[1]) throw new Error(`repeated fixed ${fixed[0]}`)
         if (options[0] === options[1] || options[0] === options[2]) throw new Error(`repeated option ${options[0]}`)
         if (options[1] === options[2]) throw new Error(`repeated option ${options[1]}`)
+        fixed.forEach((index: number) => {
+            if (index >= nouns.default.length) throw new Error(`index ${index} out of range (max ${nouns.default.length - 1})`)
+        })
+        options.forEach((index: number) => {
+            if (index >= adjectives.default.length) throw new Error(`index ${index} out of range (max ${adjectives.default.length - 1})`)
+        })
+        
         fixed.concat(options).forEach((index: number) => {
             if (Math.floor(index) != index) throw new Error (`non integer index ${index}`)
             if (index < 0) throw new Error(`negative index ${index}`)
