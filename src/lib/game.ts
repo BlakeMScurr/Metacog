@@ -1,31 +1,4 @@
-import * as nouns from "../lib/nouns";
-import * as adjectives from "../lib/adjectives";
-
-interface turn {
-    explain():string
-}
-
-export class randomTurn {
-    fixed: [number, number];
-    options: [number, number, number];
-
-    constructor(fixed: [number, number], options: [number, number, number]) {
-        if (fixed[0] === fixed[1]) throw new Error(`repeated fixed ${fixed[0]}`)
-        if (options[0] === options[1] || options[0] === options[2]) throw new Error(`repeated option ${options[0]}`)
-        if (options[1] === options[2]) throw new Error(`repeated option ${options[1]}`)
-        fixed.concat(options).forEach((index: number) => {
-            if (Math.floor(index) != index) throw new Error (`non integer index ${index}`)
-            if (index < 0) throw new Error(`negative index ${index}`)
-        })
-    }
-
-    explain():string {
-        return `The fixed words randomly chosen for this round were ${1} and the options randomly chosen for this round were ${1}`
-        
-    }
-}
-
-
+import type { turn } from "./turn";
 
 const startingCoins = 10;
 // The game class represents an instance of a MetaCog game
