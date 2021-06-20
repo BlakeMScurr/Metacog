@@ -1,4 +1,4 @@
-import type { turn } from "./turn";
+import type { turn } from "./turn/turn";
 
 const startingCoins = 10;
 // The game class represents an instance of a MetaCog game

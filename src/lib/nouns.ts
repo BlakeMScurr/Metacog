@@ -1,5 +1,4 @@
-export default
-[
+export let nouns = [
 	"people",
 	"history",
 	"way",
