@@ -8,7 +8,7 @@ export interface turn {
 }
 
 // A draw cards turn represents a random selection of a set of words from our two word lists
-export class drawCardsTurn implements turn {
+export class drawTurn implements turn {
     // existing state
     turn: number;
     treasury: treasury;
@@ -45,16 +45,16 @@ export class selectTurn implements turn {
     // existing state
     turn: number;
     treasury: treasury;
-
-    // new state
-    pair: [number, number];
     fixed: [number, number];
     options: [number, number, number];    
+
+    // new state
+    selection: [number, number];
     
 
-    constructor(turn: number, treasury: treasury, pair: [number, number], fixed: [number, number], options: [number, number, number]) {
-        assertValidCardPair(pair)
-        this.pair = pair;
+    constructor(turn: number, treasury: treasury, selection: [number, number], fixed: [number, number], options: [number, number, number]) {
+        assertValidCardPair(selection)
+        this.selection = selection;
 
         this.turn = turn
         this.treasury = treasury
@@ -63,6 +63,40 @@ export class selectTurn implements turn {
     }
 
     explain():string {
-        return `Player ${1 + (this.turn % 2)} selected (${nouns[0]}, ${adjectives[this.pair[0]]}) and (${nouns[1]}, ${adjectives[this.pair[1]]}) for their word pairings.`
+        return `Player ${1 + (this.turn % 2)} selected (${nouns[0]}, ${adjectives[this.selection[0]]}) and (${nouns[1]}, ${adjectives[this.selection[1]]}) for their word pairings.`
     }
+}
+
+export class guessTurn implements turn {
+    // existing state
+    turn: number;
+    treasury: treasury;
+    selection: [number, number];
+    fixed: [number, number];
+    options: [number, number, number];    
+ 
+    // new state
+    guess: [number, number];
+
+    constructor(turn: number, treasury: treasury, guess: [number, number], selection: [number, number], fixed: [number, number], options: [number, number, number]) {
+        assertValidCardPair(selection)
+        this.guess = guess
+
+        this.turn = turn
+        this.treasury = treasury
+        this.fixed = fixed;
+        this.options = options;
+        this.selection = selection;
+    }
+
+    explain():string {
+        // note that in order to find the number of the last player we add 1 rather than subtracting 1. The two are equivalent in proper modular arithmetic, but in JS
+        // -1 % 2 === -1, so we have to add 1, which relies on the (correct) assumption that play always alternates each turn.
+        return `Player ${1 + ((this.turn + 1)% 2)} selected (${nouns[0]}, ${adjectives[this.selection[0]]}) and (${nouns[1]}, ${adjectives[this.selection[1]]}) for their word pairings.
+Player ${1 + (this.turn % 2)} guessed that the word pairings were (${nouns[0]}, ${adjectives[this.guess[0]]}) and (${nouns[1]}, ${adjectives[this.guess[1]]}).`
+    }
+}
+
+export class doneTurn {
+
 }

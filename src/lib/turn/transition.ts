@@ -1,9 +1,9 @@
 import { nouns } from "../nouns";
 import { adjectives } from "../adjectives";
-import { drawCardsTurn } from "./turn";
+import { drawTurn } from "./turn";
 import { treasury } from "./treasury";
 
-export function randomWordSelect(turnNumber: number):drawCardsTurn {
+export function randomWordSelect(turnNumber: number):drawTurn {
     let fixedL = nouns.length
     let optsL = adjectives.length
     let options: [number, number, number] = [0,0,0];
@@ -15,5 +15,5 @@ export function randomWordSelect(turnNumber: number):drawCardsTurn {
         fixed = [Math.floor(Math.random() * fixedL), Math.floor(Math.random() * fixedL)]
     }
     
-    return new drawCardsTurn(turnNumber, new treasury(), fixed, options)
+    return new drawTurn(turnNumber, new treasury(), fixed, options)
 }
