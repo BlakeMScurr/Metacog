@@ -1,7 +1,7 @@
 import { nouns } from "../nouns";
 import { adjectives } from "../adjectives";
 import { assertIndexInRange, assertNaturalNumber, assertNoRepeats, assertValidCardPair } from "./assertions";
-import type { treasury } from "./treasury";
+import { startingPot, treasury } from "./treasury";
 
 export interface turn {
     explain():string
@@ -98,5 +98,13 @@ Player ${1 + (this.turn % 2)} guessed that the word pairings were (${nouns[0]}, 
 }
 
 export class doneTurn {
+    treasury: treasury;
 
+    constructor(treasury: treasury) {
+        this.treasury = treasury;
+    }
+
+    explain():string {
+        return `The game ended with ${this.treasury.a} coins for Player 1, ${this.treasury.b} coins for Player 2, and ${this.treasury.burned()} coins burned.`
+    }
 }

@@ -1,11 +1,16 @@
+export const startingPot = 12;
 export class treasury {
     pot: number;
     a: number;
     b: number;
 
     constructor() {
-        this.pot = 10;
+        this.pot = startingPot;
         this.a = 0;
         this.b = 0;
+    }
+
+    burned():number {
+        return startingPot - this.a - this.b
     }
 }
