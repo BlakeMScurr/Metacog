@@ -1,24 +1,23 @@
 import { nouns } from "../nouns";
 import { adjectives } from "../adjectives";
-import { assertIndexInRange, assertNaturalNumber, assertNoRepeats } from "./assertions";
+import { assertIndexInRange, assertNaturalNumber, assertNoRepeats, assertValidCardPair } from "./assertions";
+import type { treasury } from "./treasury";
 
 export interface turn {
     explain():string
 }
 
-export function randomWordSelect():wordSelectTurn {
-    let optsL = nouns.length
-    let fixedL = adjectives.length
-    let options: [number, number, number] = [Math.floor(Math.random() * optsL), Math.floor(Math.random() * optsL), Math.floor(Math.random() * optsL)]
-    let fixed: [number, number] = [Math.floor(Math.random() * fixedL), Math.floor(Math.random() * fixedL)]
-    return new wordSelectTurn(fixed, options)
-}
+// A draw cards turn represents a random selection of a set of words from our two word lists
+export class drawCardsTurn implements turn {
+    // existing state
+    turn: number;
+    treasury: treasury;
 
-export class wordSelectTurn implements turn {
+    // new state
     fixed: [number, number];
     options: [number, number, number];
 
-    constructor(fixed: [number, number], options: [number, number, number]) {
+    constructor(turn: number, treasury: treasury, fixed: [number, number], options: [number, number, number]) {
         // assert that the argumets are valid indices for our wordlists
         assertNoRepeats(fixed)
         assertNoRepeats(options)
@@ -28,6 +27,8 @@ export class wordSelectTurn implements turn {
 
         this.options = options
         this.fixed = fixed
+        this.turn = turn
+        this.treasury = treasury
     }
 
     explain():string {
@@ -40,5 +41,28 @@ export class wordSelectTurn implements turn {
     }
 }
 
+export class selectTurn implements turn {
+    // existing state
+    turn: number;
+    treasury: treasury;
 
+    // new state
+    pair: [number, number];
+    fixed: [number, number];
+    options: [number, number, number];    
+    
 
+    constructor(turn: number, treasury: treasury, pair: [number, number], fixed: [number, number], options: [number, number, number]) {
+        assertValidCardPair(pair)
+        this.pair = pair;
+
+        this.turn = turn
+        this.treasury = treasury
+        this.fixed = fixed;
+        this.options = options;
+    }
+
+    explain():string {
+        return `Player ${1 + (this.turn % 2)} selected (${nouns[0]}, ${adjectives[this.pair[0]]}) and (${nouns[1]}, ${adjectives[this.pair[1]]}) for their word pairings.`
+    }
+}
