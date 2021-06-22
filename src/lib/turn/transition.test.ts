@@ -1,34 +1,34 @@
-import { validTransition } from "./transition"
+import { assertValidTransition } from "./transition"
 import { treasury } from "./treasury"
 import { doneTurn, drawTurn, guessTurn, selectTurn } from "./turn"
 
 // Tests that the graph of the state machine is valid, i.e., that only the right kinds of states can follow one another
 test("graph", () => {
     // valid transitions
-    expect(validTransition(defaultDrawTurn(), defaultSelectTurn())).toBe(true)
-    expect(validTransition(defaultSelectTurn(), defaultGuessTurn())).toBe(true)
-    expect(validTransition(defaultGuessTurn(), defaultDrawTurn())).toBe(true)
-    expect(validTransition(defaultGuessTurn(), defaultDoneTurn())).toBe(true)
-    
+    expect(()=>{assertValidTransition(defaultDrawTurn(), defaultSelectTurn())}).not.toThrow()
+    expect(()=>{assertValidTransition(defaultSelectTurn(), defaultGuessTurn())}).not.toThrow()
+    expect(()=>{assertValidTransition(defaultGuessTurn(), defaultDrawTurn())}).not.toThrow()
+    expect(()=>{assertValidTransition(defaultGuessTurn(), defaultDoneTurn())}).not.toThrow()
+
     // invalid draw transitions
-    expect(validTransition(defaultDrawTurn(), defaultDrawTurn())).toBe(false)
-    expect(validTransition(defaultDrawTurn(), defaultGuessTurn())).toBe(false)
-    expect(validTransition(defaultDrawTurn(), defaultDoneTurn())).toBe(false)
-    
+    expect(()=>{assertValidTransition(defaultDrawTurn(), defaultDrawTurn())}).toThrow()
+    expect(()=>{assertValidTransition(defaultDrawTurn(), defaultGuessTurn())}).toThrow()
+    expect(()=>{assertValidTransition(defaultDrawTurn(), defaultDoneTurn())}).toThrow()
+
     // invalid select transitions
-    expect(validTransition(defaultSelectTurn(), defaultDrawTurn())).toBe(false)
-    expect(validTransition(defaultSelectTurn(), defaultSelectTurn())).toBe(false)
-    expect(validTransition(defaultSelectTurn(), defaultDoneTurn())).toBe(false)
-    
+    expect(()=>{assertValidTransition(defaultSelectTurn(), defaultDrawTurn())}).toThrow()
+    expect(()=>{assertValidTransition(defaultSelectTurn(), defaultSelectTurn())}).toThrow()
+    expect(()=>{assertValidTransition(defaultSelectTurn(), defaultDoneTurn())}).toThrow()
+
     // invalid guess transitions
-    expect(validTransition(defaultGuessTurn(), defaultGuessTurn())).toBe(false)
-    expect(validTransition(defaultGuessTurn(), defaultSelectTurn())).toBe(false)
+    expect(()=>{assertValidTransition(defaultGuessTurn(), defaultGuessTurn())}).toThrow()
+    expect(()=>{assertValidTransition(defaultGuessTurn(), defaultSelectTurn())}).toThrow()
 
     // invalid done transitions
-    expect(validTransition(defaultDoneTurn(), defaultDrawTurn())).toBe(false)
-    expect(validTransition(defaultDoneTurn(), defaultSelectTurn())).toBe(false)
-    expect(validTransition(defaultDoneTurn(), defaultGuessTurn())).toBe(false)
-    expect(validTransition(defaultDoneTurn(), defaultDoneTurn())).toBe(false)
+    expect(()=>{assertValidTransition(defaultDoneTurn(), defaultDrawTurn())}).toThrow()
+    expect(()=>{assertValidTransition(defaultDoneTurn(), defaultSelectTurn())}).toThrow()
+    expect(()=>{assertValidTransition(defaultDoneTurn(), defaultGuessTurn())}).toThrow()
+    expect(()=>{assertValidTransition(defaultDoneTurn(), defaultDoneTurn())}).toThrow()
 })
 
 

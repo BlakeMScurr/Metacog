@@ -13,4 +13,8 @@ export class treasury {
     burned():number {
         return startingPot - this.a - this.b
     }
+
+    equals(t: treasury):boolean {
+        return this.pot === t.pot && this.a === t.a && this.b == t.b
+    }
 }

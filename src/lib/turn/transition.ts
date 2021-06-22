@@ -3,9 +3,13 @@ import { adjectives } from "../adjectives";
 import { doneTurn, drawTurn, guessTurn, selectTurn } from "./turn";
 import type { turn } from "./turn";
 import { treasury } from "./treasury";
-
-function drawToSelect(last: turn, current: turn):boolean {
-    return true
+import { assertValidCardPair } from "./assertions";
+function drawToSelect(last: turn, current: turn) {
+    if (!last.treasury.equals(current.treasury)) throw new Error(`The treasury can't change between draw and select`)
+    let draw = <drawTurn>last
+    draw.assertValid()
+    let select = <selectTurn>current
+    select.assertValid()
 }
 
 function selectToGuess(last: turn, current: turn):boolean {
@@ -35,9 +39,10 @@ let transitions: Map<string, Map<string, (last: turn, current: turn) => boolean>
     ]
 )
 
-export function validTransition(last: turn, current: turn):boolean {
-    if (!transitions.has(last.kind()) || !transitions.get(last.kind()).get(current.kind())) return false
-    return transitions.get(last.kind()).get(current.kind())(last, current)
+export function assertValidTransition(last: turn, current: turn) {
+    if (!transitions.has(last.kind())) throw new Error(`turn kind ${last.kind()} doesn't exist`)
+    if (!transitions.get(last.kind()).get(current.kind())) throw new Error(`turn kind ${last.kind()} can't be followed by turn kind ${current.kind()}`)
+    transitions.get(last.kind()).get(current.kind())(last, current)
 }
 
 export function randomWordSelect(turnNumber: number):drawTurn {

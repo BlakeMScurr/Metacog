@@ -16,17 +16,18 @@ export class drawTurn {
     options: [number, number, number];
 
     constructor(turn: number, treasury: treasury, fixed: [number, number], options: [number, number, number]) {
-        // assert that the argumets are valid indices for our wordlists
-        assertNoRepeats(fixed)
-        assertNoRepeats(options)
-        fixed.forEach((i: number) => { assertIndexInRange(i, nouns) })
-        options.forEach((i: number) => { assertIndexInRange(i, adjectives) })
-        fixed.concat(options).forEach((i: number) => { assertNaturalNumber(i) })
-
         this.options = options
         this.fixed = fixed
         this.turn = turn
         this.treasury = treasury
+    }
+
+    assertValid() {
+        assertNoRepeats(this.fixed)
+        assertNoRepeats(this.options)
+        this.fixed.forEach((i: number) => { assertIndexInRange(i, nouns) })
+        this.options.forEach((i: number) => { assertIndexInRange(i, adjectives) })
+        this.fixed.concat(this.options).forEach((i: number) => { assertNaturalNumber(i) })
     }
 
     kind():string { return "draw" }
@@ -51,15 +52,17 @@ export class selectTurn {
     // new state
     selection: [number, number];
     
-
     constructor(turn: number, treasury: treasury, selection: [number, number], fixed: [number, number], options: [number, number, number]) {
-        assertValidCardPair(selection)
         this.selection = selection;
 
         this.turn = turn
         this.treasury = treasury
         this.fixed = fixed;
         this.options = options;
+    }
+
+    assertValid() {
+        assertValidCardPair(this.selection)
     }
 
     kind():string { return "select" }
