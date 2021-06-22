@@ -1,7 +1,44 @@
 import { nouns } from "../nouns";
 import { adjectives } from "../adjectives";
-import { drawTurn } from "./turn";
+import { doneTurn, drawTurn, guessTurn, selectTurn } from "./turn";
+import type { turn } from "./turn";
 import { treasury } from "./treasury";
+
+function drawToSelect(last: turn, current: turn):boolean {
+    return true
+}
+
+function selectToGuess(last: turn, current: turn):boolean {
+    return true
+}
+
+function guessToDraw(last: turn, current: turn):boolean {
+    return true
+}
+
+function guessToDone(last: turn, current: turn):boolean {
+    return true
+}
+
+let transitions: Map<string, Map<string, (last: turn, current: turn) => boolean>> = new Map(
+    [
+        ["draw", new Map([
+            ["select", drawToSelect],
+        ])],
+        ["select", new Map([
+            ["guess", selectToGuess],
+        ])],
+        ["guess", new Map([
+            ["draw", guessToDraw],
+            ["done", guessToDone],
+        ])],
+    ]
+)
+
+export function validTransition(last: turn, current: turn):boolean {
+    if (!transitions.has(last.kind()) || !transitions.get(last.kind()).get(current.kind())) return false
+    return transitions.get(last.kind()).get(current.kind())(last, current)
+}
 
 export function randomWordSelect(turnNumber: number):drawTurn {
     let fixedL = nouns.length

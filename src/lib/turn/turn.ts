@@ -1,14 +1,12 @@
 import { nouns } from "../nouns";
 import { adjectives } from "../adjectives";
 import { assertIndexInRange, assertNaturalNumber, assertNoRepeats, assertValidCardPair } from "./assertions";
-import { startingPot, treasury } from "./treasury";
+import type { treasury } from "./treasury";
 
-export interface turn {
-    explain():string
-}
+export type turn = drawTurn | selectTurn | guessTurn | doneTurn
 
 // A draw cards turn represents a random selection of a set of words from our two word lists
-export class drawTurn implements turn {
+export class drawTurn {
     // existing state
     turn: number;
     treasury: treasury;
@@ -31,6 +29,8 @@ export class drawTurn implements turn {
         this.treasury = treasury
     }
 
+    kind():string { return "draw" }
+
     explain():string {
         return `The fixed words randomly chosen for this round were ${this.wordsOf(this.fixed, nouns)} and the options randomly chosen for this round were ${this.wordsOf(this.options, adjectives)}`
     }
@@ -41,7 +41,7 @@ export class drawTurn implements turn {
     }
 }
 
-export class selectTurn implements turn {
+export class selectTurn {
     // existing state
     turn: number;
     treasury: treasury;
@@ -62,12 +62,14 @@ export class selectTurn implements turn {
         this.options = options;
     }
 
+    kind():string { return "select" }
+
     explain():string {
         return `Player ${1 + (this.turn % 2)} selected (${nouns[0]}, ${adjectives[this.selection[0]]}) and (${nouns[1]}, ${adjectives[this.selection[1]]}) for their word pairings.`
     }
 }
 
-export class guessTurn implements turn {
+export class guessTurn {
     // existing state
     turn: number;
     treasury: treasury;
@@ -89,6 +91,8 @@ export class guessTurn implements turn {
         this.selection = selection;
     }
 
+    kind():string { return "guess" }
+
     explain():string {
         // note that in order to find the number of the last player we add 1 rather than subtracting 1. The two are equivalent in proper modular arithmetic, but in JS
         // -1 % 2 === -1, so we have to add 1, which relies on the (correct) assumption that play always alternates each turn.
@@ -103,6 +107,8 @@ export class doneTurn {
     constructor(treasury: treasury) {
         this.treasury = treasury;
     }
+
+    kind():string { return "done" }
 
     explain():string {
         return `The game ended with ${this.treasury.a} coins for Player 1, ${this.treasury.b} coins for Player 2, and ${this.treasury.burned()} coins burned.`
