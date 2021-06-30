@@ -1,17 +1,17 @@
 <script lang="ts">
     import Selector from "../components/selector.svelte";
     import { Game, state } from "../lib/game";
-    import * as nouns from "../lib/nouns";
-    import * as adjectives from "../lib/adjectives";
+    import { nouns } from "../lib/nouns";
+    import { adjectives } from "../lib/adjectives";
 
     let fixed: [string, string] = ["", ""];
     let options: [string, string, string] = ["", "", ""];
     function randomiseWords() {
-        options[0] = nouns.default[Math.floor(Math.random() * nouns.default.length)]
-        options[1] = nouns.default[Math.floor(Math.random() * nouns.default.length)]
-        options[2] = nouns.default[Math.floor(Math.random() * nouns.default.length)]
-        fixed[0] = adjectives.default[Math.floor(Math.random() * adjectives.default.length)]
-        fixed[1] = adjectives.default[Math.floor(Math.random() * adjectives.default.length)]
+        options[0] = nouns[Math.floor(Math.random() * nouns.length)]
+        options[1] = nouns[Math.floor(Math.random() * nouns.length)]
+        options[2] = nouns[Math.floor(Math.random() * nouns.length)]
+        fixed[0] = adjectives[Math.floor(Math.random() * adjectives.length)]
+        fixed[1] = adjectives[Math.floor(Math.random() * adjectives.length)]
         fixed = fixed
         options = options
     }
