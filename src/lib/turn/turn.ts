@@ -109,11 +109,15 @@ Player ${1 + (this.turn % 2)} guessed that the word pairings were (${nouns[0]}, 
 }
 
 export class doneTurn {
+    turn: number;
     treasury: treasury;
 
-    constructor(treasury: treasury) {
+    constructor(turn: number, treasury: treasury) {
+        this.turn = turn
         this.treasury = treasury;
     }
+
+    assertValid(){}
 
     kind():string { return "done" }
 

@@ -7,8 +7,8 @@ test("graph", () => {
     // valid transitions
     expect(()=>{assertValidTransition(defaultDrawTurn(), defaultSelectTurn())}).not.toThrow()
     expect(()=>{assertValidTransition(defaultSelectTurn(), defaultGuessTurn())}).not.toThrow()
-    expect(()=>{assertValidTransition(defaultGuessTurn(), defaultDrawTurn())}).not.toThrow()
-    expect(()=>{assertValidTransition(defaultGuessTurn(), defaultDoneTurn())}).not.toThrow()
+    expect(()=>{assertValidTransition(defaultGuessTurn(), nextDrawTurn())}).not.toThrow()
+    expect(()=>{assertValidTransition(defaultGuessTurn(), defaultDoneTurn())}).toThrow(`Cannot complete game while there are 10 coins to be divided up`)
 
     // invalid draw transitions
     expect(()=>{assertValidTransition(defaultDrawTurn(), defaultDrawTurn())}).toThrow()
@@ -40,10 +40,18 @@ function defaultDrawTurn() {
         [0, 1, 2]
     )
 }
+function nextDrawTurn() {
+    return new drawTurn(
+        3,
+        updatedTreasury(),
+        [0, 1],
+        [0, 1, 2]
+    )
+}
 
 function defaultSelectTurn() {
     return new selectTurn(
-        0,
+        1,
         new treasury(),
         [0, 1],
         [0, 1],
@@ -52,13 +60,9 @@ function defaultSelectTurn() {
 }
 
 function defaultGuessTurn() {
-    let t = new treasury()
-    t.pot -= 2
-    t.a++
-    t.b++
     return new guessTurn(
-        0,
-        t,
+        2,
+        updatedTreasury(),
         [0, 1],
         [0, 1],
         [0, 1],
@@ -68,6 +72,15 @@ function defaultGuessTurn() {
 
 function defaultDoneTurn() {
     return new doneTurn(
-        new treasury()
+        3,
+        updatedTreasury()
     )
+}
+
+function updatedTreasury() {
+    let t = new treasury()
+    t.pot -= 2
+    t.a++
+    t.b++
+    return t
 }

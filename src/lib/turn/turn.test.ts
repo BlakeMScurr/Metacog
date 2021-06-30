@@ -49,7 +49,7 @@ test("doneTurn.explain", () => {
     t.a = 7
     t.b = 3
     t.pot = 0
-    expect(new doneTurn(t).explain()).toBe(
+    expect(new doneTurn(3, t).explain()).toBe(
         "The game ended with 7 coins for Player 1, 3 coins for Player 2, and 2 coins burned."
     )
 
