@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Selector from "../components/selector.svelte";
+    import Selection from "../components/Selection.svelte";
     import { Game, state } from "../lib/game";
     import { nouns } from "../lib/nouns";
     import { adjectives } from "../lib/adjectives";
@@ -41,4 +41,4 @@
 <br>
 { pairingsExplanation }
 
-<Selector {fixed} {options} on:select={onSelect}></Selector>
+<Selection {fixed} {options} on:select={onSelect}></Selection>
