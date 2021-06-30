@@ -13,6 +13,7 @@ export function assertIndexInRange(i: number, wordList: Array<any>) {
 }
 
 export function assertValidCardPair(pair: [number, number]) {
+    if (pair.length != 2) throw new Error(`Pairs contain 2 cards`)
     assertNoRepeats(pair)
     pair.forEach(i => {
         assertNaturalNumber(i)

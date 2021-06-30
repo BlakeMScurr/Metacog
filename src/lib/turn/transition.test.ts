@@ -52,9 +52,13 @@ function defaultSelectTurn() {
 }
 
 function defaultGuessTurn() {
+    let t = new treasury()
+    t.pot -= 2
+    t.a++
+    t.b++
     return new guessTurn(
         0,
-        new treasury(),
+        t,
         [0, 1],
         [0, 1],
         [0, 1],

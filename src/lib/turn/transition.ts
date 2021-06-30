@@ -1,18 +1,35 @@
 import { nouns } from "../nouns";
 import { adjectives } from "../adjectives";
-import { doneTurn, drawTurn, guessTurn, selectTurn } from "./turn";
+import { drawTurn, guessTurn, selectTurn } from "./turn";
 import type { turn } from "./turn";
 import { treasury } from "./treasury";
-import { assertValidCardPair } from "./assertions";
+import { arraysEqual } from "../util";
+
 function drawToSelect(last: turn, current: turn) {
-    if (!last.treasury.equals(current.treasury)) throw new Error(`The treasury can't change between draw and select`)
+    // assert turns are independently valid
     let draw = <drawTurn>last
     draw.assertValid()
     let select = <selectTurn>current
     select.assertValid()
+    
+    // assert shared state hasn't updated
+    if (!last.treasury.equals(current.treasury)) throw new Error(`The treasury can't change between draw and select`)
+    if (!arraysEqual(draw.fixed, select.fixed)) throw new Error(`Fixed words can't change between draw and select turn`)
+    if (!arraysEqual(draw.options, select.options)) throw new Error(`Optional words can't change between draw and select turn`)
 }
 
 function selectToGuess(last: turn, current: turn) {
+    // assert turns are independently valid
+    let select = <selectTurn>last
+    select.assertValid()
+    let guess = <guessTurn>current
+    guess.assertValid()
+
+    // assert selection hasn't been maliciously updated
+    if (!arraysEqual(select.selection, guess.selection)) throw new Error(`Selection can't be updated between selection and guess rounds`)
+
+    // assert treasury updates correctly
+    last.treasury.validRoundAllocation(current.treasury, guess.selection, guess.guess, select.turn % 2 == 0)
 }
 
 function guessToDraw(last: turn, current: turn) {

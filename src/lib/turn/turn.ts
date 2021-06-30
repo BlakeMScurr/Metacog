@@ -22,6 +22,7 @@ export class drawTurn {
         this.treasury = treasury
     }
 
+    // the fixed and asserts must be sets of unique natural numbers
     assertValid() {
         assertNoRepeats(this.fixed)
         assertNoRepeats(this.options)
@@ -84,7 +85,6 @@ export class guessTurn {
     guess: [number, number];
 
     constructor(turn: number, treasury: treasury, guess: [number, number], selection: [number, number], fixed: [number, number], options: [number, number, number]) {
-        assertValidCardPair(selection)
         this.guess = guess
 
         this.turn = turn
@@ -92,6 +92,10 @@ export class guessTurn {
         this.fixed = fixed;
         this.options = options;
         this.selection = selection;
+    }
+
+    assertValid() {
+        assertValidCardPair(this.guess)
     }
 
     kind():string { return "guess" }
