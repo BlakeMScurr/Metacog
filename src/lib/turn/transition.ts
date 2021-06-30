@@ -12,19 +12,16 @@ function drawToSelect(last: turn, current: turn) {
     select.assertValid()
 }
 
-function selectToGuess(last: turn, current: turn):boolean {
-    return true
+function selectToGuess(last: turn, current: turn) {
 }
 
-function guessToDraw(last: turn, current: turn):boolean {
-    return true
+function guessToDraw(last: turn, current: turn) {
 }
 
-function guessToDone(last: turn, current: turn):boolean {
-    return true
+function guessToDone(last: turn, current: turn) {
 }
 
-let transitions: Map<string, Map<string, (last: turn, current: turn) => boolean>> = new Map(
+let transitions: Map<string, Map<string, (last: turn, current: turn) => void>> = new Map(
     [
         ["draw", new Map([
             ["select", drawToSelect],
