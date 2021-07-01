@@ -24,3 +24,15 @@ export function nounsOf(indices: [number, number]):[string, string] {
 export function adjectivesOf(indices: [number, number, number]):[string, string, string] {
   return [adjectives[indices[0]], adjectives[indices[1]], adjectives[indices[2]]]
 }
+
+// from https://stackoverflow.com/a/1349426/7371580
+export function makeid(length) {
+  var result           = '';
+  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var charactersLength = characters.length;
+  for ( var i = 0; i < length; i++ ) {
+    result += characters.charAt(Math.floor(Math.random() * 
+charactersLength));
+ }
+ return result;
+}
