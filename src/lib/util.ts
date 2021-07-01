@@ -1,3 +1,6 @@
+import { adjectives } from "./adjectives";
+import { nouns } from "./nouns";
+
 export function arraysEqual(a, b) {
     if (a === b) return true;
     if (a == null || b == null) return false;
@@ -13,3 +16,11 @@ export function arraysEqual(a, b) {
     }
     return true;
   }
+
+export function nounsOf(indices: [number, number]):[string, string] {
+  return [nouns[indices[0]], nouns[indices[1]]]
+}
+
+export function adjectivesOf(indices: [number, number, number]):[string, string, string] {
+  return [adjectives[indices[0]], adjectives[indices[1]], adjectives[indices[2]]]
+}

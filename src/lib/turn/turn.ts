@@ -1,6 +1,6 @@
 import { nouns } from "../nouns";
 import { adjectives } from "../adjectives";
-import { assertIndexInRange, assertNaturalNumber, assertNoRepeats, assertValidCardPair } from "./assertions";
+import { assertIndexInRange, assertNaturalNumber, assertNoRepeats, assertValidCardPair } from "./assertions/assertions";
 import type { treasury } from "./treasury";
 
 export type turn = drawTurn | selectTurn | guessTurn | doneTurn
@@ -111,6 +111,10 @@ Player ${1 + (this.turn % 2)} guessed that the word pairings were (${nouns[0]}, 
 export class doneTurn {
     turn: number;
     treasury: treasury;
+
+    // this just fills out the implicit interface
+    options: [number, number, number];
+    fixed: [number, number]
 
     constructor(turn: number, treasury: treasury) {
         this.turn = turn

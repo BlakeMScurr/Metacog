@@ -1,4 +1,4 @@
-import { randomWordSelect } from "./transition"
+import { randomDraw } from "./transition"
 import { treasury } from "./treasury"
 import { doneTurn, drawTurn, guessTurn, selectTurn } from "./turn"
 
@@ -22,9 +22,9 @@ test("drawCardsTurn.explain", ()=> {
     expect(new drawTurn(0, new treasury(), [0, 1], [0, 1, 2]).explain()).toBe(`The fixed words randomly chosen for this round were ["people", "history"] and the options randomly chosen for this round were ["abandoned", "able", "absolute"]`)
 })
 
-test("randomWordSelect", () => {
+test("randomDraw", () => {
     for (let i = 0; i < 100; i++) {
-        expect(() => { randomWordSelect(0) }).not.toThrow()
+        expect(() => { randomDraw(0) }).not.toThrow()
     }
 })
 

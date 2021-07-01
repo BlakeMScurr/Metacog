@@ -1,4 +1,4 @@
-import { assertValidTransition } from "./transition"
+import { assertValidTransition } from "./assertions/transition"
 import { treasury } from "./treasury"
 import { doneTurn, drawTurn, guessTurn, selectTurn } from "./turn"
 

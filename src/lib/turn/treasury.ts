@@ -18,9 +18,14 @@ export class treasury {
         return this.pot === t.pot && this.a === t.a && this.b == t.b
     }
 
-    validRoundAllocation(allocation: treasury, selection: [number, number], guess: [number, number], aIsSelector: boolean) {
-        if (this.pot -2 != allocation.pot) throw new Error("treasury pot must reduce when each round is decided")
-        
+    nextAllocation(selection: [number, number], guess: [number, number], aIsSelector: boolean) {
+        let nextAllocation = new treasury()
+        nextAllocation.pot = this.pot
+        nextAllocation.a = this.a
+        nextAllocation.b = this.b
+
+        nextAllocation.pot -= 2
+
         let consensuses = 0
         selection.forEach((selection: number, i: number) => {
             if (selection === guess[i]) consensuses++
@@ -47,12 +52,24 @@ export class treasury {
         }
 
         if (aIsSelector) {
-            if (this.a + selectorDelta != allocation.a) throw new Error(`Player a got ${allocation.a} but they should have gotten ${this.a + selectorDelta}`)
-            if (this.b + guesserDelta != allocation.b) throw new Error(`Player a got ${allocation.b} but they should have gotten ${this.b + guesserDelta}`)
+            nextAllocation.a += selectorDelta
+            nextAllocation.b += guesserDelta
         } else {
-            if (this.a + guesserDelta != allocation.a) throw new Error(`Player a got ${allocation.a} but they should have gotten ${this.a + guesserDelta}`)
-            if (this.b + selectorDelta != allocation.b) throw new Error(`Player a got ${allocation.b} but they should have gotten ${this.b + selectorDelta}`)
+            nextAllocation.a += guesserDelta
+            nextAllocation.b += selectorDelta
+        }
+
+        return nextAllocation
+    }
+    
+    validRoundAllocation(allocation: treasury, selection: [number, number], guess: [number, number], aIsSelector: boolean) {
+        let next = this.nextAllocation(selection, guess, aIsSelector)
+        if (!allocation.equals(next)) {
+            throw new Error(`Next allocation should be ${
+                Object.keys(next).map((key) => {return key + ": " + next[key]})
+            }, not ${
+                Object.keys(this).map((key) => {return key + ": " + this[key]})
+            }`)
         }
     }
-
 }
