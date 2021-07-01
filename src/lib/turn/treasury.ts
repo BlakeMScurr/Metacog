@@ -1,4 +1,4 @@
-export const startingPot = 12;
+export const startingPot = 4;
 export class treasury {
     pot: number;
     a: number;
@@ -11,7 +11,7 @@ export class treasury {
     }
 
     burned():number {
-        return startingPot - this.a - this.b
+        return startingPot - (this.a + this.b + this.pot)
     }
 
     equals(t: treasury):boolean {
@@ -68,7 +68,7 @@ export class treasury {
             throw new Error(`Next allocation should be ${
                 Object.keys(next).map((key) => {return key + ": " + next[key]})
             }, not ${
-                Object.keys(this).map((key) => {return key + ": " + this[key]})
+                Object.keys(allocation).map((key) => {return key + ": " + allocation[key]})
             }`)
         }
     }

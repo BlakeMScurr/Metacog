@@ -24,7 +24,7 @@ test("drawCardsTurn.explain", ()=> {
 
 test("randomDraw", () => {
     for (let i = 0; i < 100; i++) {
-        expect(() => { randomDraw(0) }).not.toThrow()
+        expect(() => { randomDraw(0, new treasury()) }).not.toThrow()
     }
 })
 
