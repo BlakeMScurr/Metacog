@@ -8,6 +8,7 @@
             .then(response => {
                 return response.json()
             }).then(data => {
+                console.log("going!")
                 goto("game/" + data.roomCode)
             })
     }
