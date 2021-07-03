@@ -1,7 +1,13 @@
 // TODO: I should probably put this on a class or something, rather than holding the rooms as a module level variable.
-// It feels gross and overly permissive to be encapsulated like this, and there's surely the chance of a race condition.
-let rooms: Map<string, roomState> = new Map();
 
+import { randomDraw } from "$lib/turn/transition";
+import { treasury } from "$lib/turn/treasury";
+import type { turn } from "$lib/turn/turn";
+
+// It feels gross and overly permissive to be encapsulated like this, and there's surely the chance of a race condition.
+let rooms: Map<string, {"creation": roomState, execution: turn}> = new Map();
+
+// TODO: consider incorporating creation states into room creation
 export enum roomState {
     empty = 1,
     waiting,
@@ -10,19 +16,23 @@ export enum roomState {
 
 export function joinRoom(room: string):roomState {
     if (!rooms.has(room)) return roomState.full
-    let oldState = rooms.get(room)
+    let oldState = rooms.get(room).creation
     switch (oldState) {
         case roomState.empty:
-            rooms.set(room, roomState.waiting)
+            rooms.set(room, {creation: roomState.waiting, execution: undefined})
             break
         case roomState.waiting:
-            rooms.set(room, roomState.full)
+            rooms.set(room, {creation: roomState.full, execution: randomDraw(0, new treasury())})
             break
         case roomState.full:
             break
     }
 
     return oldState
+}
+
+export function getRoomState(room: string):turn {
+    return rooms.get(room).execution
 }
 
 // from https://stackoverflow.com/a/1349426/7371580
@@ -44,6 +54,8 @@ export function newRoom():string {
     while (rooms.has(id)) {
         id = generateID()
     }
-    rooms.set(id, roomState.empty)
+    rooms.set(id, {creation: roomState.empty, execution: undefined})
     return id
 }
+
+export const salt = `this is probably a bad salt, partly because I don't really get how JWTs work, and partly because it's visible in the repo :)))))`

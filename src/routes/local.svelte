@@ -40,27 +40,27 @@
 
 <p>{state.explain()}</p>
 
-{#if state.kind() === "draw"}
+{#if state.kind === "draw"}
     <p>Player {player(state.turn + 1)}, please pair up the following words without showing {player(state.turn)}</p>
     <Selection 
         fixed={nounsOf(state.fixed)}
         options={adjectivesOf(state.options)}
         on:select={onSelect}
     ></Selection>
-{:else if state.kind() === "select"}
+{:else if state.kind === "select"}
     <p>Player {player(state.turn + 1)}, please guess how player {player(state.turn)} paired the following words</p>
     <Selection 
         fixed={nounsOf(state.fixed)}
         options={adjectivesOf(state.options)}
         on:select={onGuess}
     ></Selection>
-{:else if state.kind() === "guess"}
+{:else if state.kind === "guess"}
     {#if state.treasury.pot > 0}
         <button on:click={onDraw}>Generate new words</button>
     {:else}
         <button on:click={onDone}>Finish game</button>
     {/if}
-{:else if state.kind() === "done"}
+{:else if state.kind === "done"}
     <button on:click={()=>{
         state = randomDraw(0, new treasury())
     }}>Play again</button>

@@ -1,12 +1,14 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { seat } from '../../client/room';
-	import { onMount } from 'svelte';
-	import type { turn } from '$lib/turn/turn';
+	import { onDestroy, onMount } from 'svelte';
+	import { castTurn } from '../../lib/turn/turn';
+	import type { turn } from '../../lib/turn/turn';
 	
 	let room = ""
 	let info = "Joining room"
 
+	let statePollInterval;
 	let state: turn;
 
 	page.subscribe((pg) => {
@@ -20,9 +22,13 @@
 			let s = new seat(json.jwt, json.playerA, room)
 			info = `joined room ${s.room} as player ${s.playerA ? "A" : "B"}`
 
-			setInterval(async () => {
-				let result = await fetch(`/api/getState?room=${room}`)
-				state = await result.json()
+			statePollInterval = setInterval(async () => {
+				let result = await fetch(`/api/getState?room=${room}&jwt=${json.jwt}`)
+				console.log(result)
+				let stateJSON = await result.json()
+				if (stateJSON.state) {
+					state = castTurn(JSON.parse(stateJSON.state))
+				}
 			}, 500)
 
 		} else {
@@ -31,10 +37,16 @@
 		}
 		
 	})
+
+	onDestroy(() => {
+		clearInterval(statePollInterval)
+	})
 </script>
 
 <p>{info}</p>
 
 {#if !state}
 	<p>Waiting for a second player to join the room</p>
+{:else}
+	{state}
 {/if}

@@ -57,7 +57,7 @@ export function assertValidTransition(last: turn, current: turn) {
     last.assertValid()
     current.assertValid()
 
-    if (!transitions.has(last.kind())) throw new Error(`turn kind ${last.kind()} doesn't exist`)
-    if (!transitions.get(last.kind()).get(current.kind())) throw new Error(`turn kind ${last.kind()} can't be followed by turn kind ${current.kind()}`)
-    transitions.get(last.kind()).get(current.kind())(last, current)
+    if (!transitions.has(last.kind)) throw new Error(`turn kind ${last.kind} doesn't exist`)
+    if (!transitions.get(last.kind).get(current.kind)) throw new Error(`turn kind ${last.kind} can't be followed by turn kind ${current.kind}`)
+    transitions.get(last.kind).get(current.kind)(last, current)
 }

@@ -2,6 +2,8 @@ import { nouns } from "../nouns";
 import { adjectives } from "../adjectives";
 import { assertIndexInRange, assertNaturalNumber, assertNoRepeats, assertValidCardPair } from "./assertions/assertions";
 import type { treasury } from "./treasury";
+import { plainToClass } from "class-transformer";
+import { newDone, newGuess, newSelect, randomDraw } from "./transition";
 
 export type turn = drawTurn | selectTurn | guessTurn | doneTurn
 
@@ -10,7 +12,7 @@ export class drawTurn {
     // existing state
     turn: number
     treasury: treasury
-    const kind: string
+    kind: string
 
     // new state
     fixed: [number, number]
@@ -49,7 +51,7 @@ export class selectTurn {
     treasury: treasury
     fixed: [number, number]
     options: [number, number, number]
-    const kind: string
+    kind: string
 
     // new state
     selection: [number, number];
@@ -80,7 +82,7 @@ export class guessTurn {
     selection: [number, number]
     fixed: [number, number]
     options: [number, number, number]
-    const kind: string;
+    kind: string;
  
     // new state
     guess: [number, number]
@@ -115,7 +117,7 @@ export class doneTurn {
     // this just fills out the implicit interface
     options: [number, number, number]
     fixed: [number, number]
-    const kind: string
+    kind: string
 
     constructor(turn: number, treasury: treasury) {
         this.turn = turn
@@ -130,6 +132,17 @@ export class doneTurn {
     }
 }
 
-export function unmarshalTurn(obj) {
-    switch(obj.)
+export function castTurn(obj):turn {
+    switch(obj.kind) {
+        case "draw":
+            return plainToClass(drawTurn, obj)
+        case "select":
+            return plainToClass(selectTurn, obj)
+        case "guess":
+            return plainToClass(guessTurn, obj)
+        case "done":
+            return plainToClass(doneTurn, obj)
+        default:
+            throw new Error(`Invalid turn kind ${obj.kind}`)
+    }
 }

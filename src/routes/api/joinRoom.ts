@@ -1,7 +1,5 @@
 import * as jwt from 'jsonwebtoken';
-import { joinRoom, roomState } from '../../server/server';
-
-const salt = `this is probably a bad salt, partly because I don't really get how JWTs work, and partly because it's visible in the repo :)))))`
+import { joinRoom, roomState, salt } from '../../server/server';
 
 export async function get({ query }) {
     let room = query.get("room")
