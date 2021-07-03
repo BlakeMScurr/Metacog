@@ -5,6 +5,12 @@ import type { treasury } from "./treasury";
 import { plainToClass } from "class-transformer";
 import { newDone, newGuess, newSelect, randomDraw } from "./transition";
 
+import Draw from './components/draw.svelte';
+import Select from './components/select.svelte';
+import Guess from './components/guess.svelte';
+import Done from './components/done.svelte';
+
+
 export type turn = drawTurn | selectTurn | guessTurn | doneTurn
 
 // A draw cards turn represents a random selection of a set of words from our two word lists
@@ -43,6 +49,15 @@ export class drawTurn {
     private wordsOf(indices: Array<number>, wordList: Array<string>):string {
         return "[" + indices.map((i) => {return `"${wordList[i]}"`}).join(", ") + "]"
     }
+
+    component() {
+        return { 
+            component: Draw,
+            props: {
+                state: this,
+            }
+        }
+    }
 }
 
 export class selectTurn {
@@ -72,6 +87,10 @@ export class selectTurn {
 
     explain():string {
         return `Player ${1 + (this.turn % 2)} selected (${nouns[0]}, ${adjectives[this.selection[0]]}) and (${nouns[1]}, ${adjectives[this.selection[1]]}) for their word pairings.`
+    }
+
+    component() {
+        return Select
     }
 }
 
@@ -108,6 +127,10 @@ export class guessTurn {
         return `Player ${1 + ((this.turn + 1)% 2)} selected (${nouns[0]}, ${adjectives[this.selection[0]]}) and (${nouns[1]}, ${adjectives[this.selection[1]]}) for their word pairings.
 Player ${1 + (this.turn % 2)} guessed that the word pairings were (${nouns[0]}, ${adjectives[this.guess[0]]}) and (${nouns[1]}, ${adjectives[this.guess[1]]}).`
     }
+
+    component() {
+        return Guess
+    }
 }
 
 export class doneTurn {
@@ -129,6 +152,10 @@ export class doneTurn {
 
     explain():string {
         return `The game ended with ${this.treasury.a} coins for Player 1, ${this.treasury.b} coins for Player 2, and ${this.treasury.burned()} coins burned.`
+    }
+
+    component() {
+        return Done
     }
 }
 

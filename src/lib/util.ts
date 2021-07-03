@@ -24,3 +24,7 @@ export function nounsOf(indices: [number, number]):[string, string] {
 export function adjectivesOf(indices: [number, number, number]):[string, string, string] {
   return [adjectives[indices[0]], adjectives[indices[1]], adjectives[indices[2]]]
 }
+
+export function player(turn: number):string {
+  return turn % 2 === 0 ? "A" : "B"
+}
