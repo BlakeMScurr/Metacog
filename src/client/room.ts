@@ -1,4 +1,3 @@
-
 export class seat {
     jwt: string
     playerA: boolean

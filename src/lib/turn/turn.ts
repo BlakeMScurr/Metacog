@@ -1,7 +1,7 @@
 import { nouns } from "../nouns";
 import { adjectives } from "../adjectives";
 import { assertIndexInRange, assertNaturalNumber, assertNoRepeats, assertValidCardPair } from "./assertions/assertions";
-import type { treasury } from "./treasury";
+import { treasury } from "./treasury";
 import { plainToClass } from "class-transformer";
 
 export type turn = drawTurn | selectTurn | guessTurn | doneTurn
@@ -132,16 +132,24 @@ export class doneTurn {
 }
 
 export function castTurn(obj):turn {
+    let t: turn
     switch(obj.kind) {
         case "draw":
-            return plainToClass(drawTurn, obj)
+            t = plainToClass(drawTurn, obj)
+            break
         case "select":
-            return plainToClass(selectTurn, obj)
+            t = plainToClass(selectTurn, obj)
+            break
         case "guess":
-            return plainToClass(guessTurn, obj)
+            t = plainToClass(guessTurn, obj)
+            break
         case "done":
-            return plainToClass(doneTurn, obj)
+            t = plainToClass(doneTurn, obj)
+            break
         default:
             throw new Error(`Invalid turn kind ${obj.kind}`)
     }
+
+    t.treasury = plainToClass(treasury, t.treasury)
+    return t
 }

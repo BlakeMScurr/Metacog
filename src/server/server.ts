@@ -35,6 +35,11 @@ export function getRoomState(room: string):turn {
     return rooms.get(room).execution
 }
 
+export function updateRoomState(room: string, t: turn) {
+    let old = rooms.get(room)
+    rooms.set(room, { creation: old.creation, execution: t})
+}
+
 // from https://stackoverflow.com/a/1349426/7371580
 export function newRoom():string {
     const length = 4

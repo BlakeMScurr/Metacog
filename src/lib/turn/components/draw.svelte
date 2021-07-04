@@ -1,9 +1,9 @@
 <script lang="ts">
     import { adjectivesOf, nounsOf, player } from "$lib/util";
-import { createEventDispatcher } from "svelte";
+    import { createEventDispatcher } from "svelte";
     import Selection from "../../../components/Selection.svelte";
-import { assertValidTransition } from "../assertions/transition";
-import { newSelect } from "../transition";
+    import { assertValidTransition } from "../assertions/transition";
+    import { newSelect } from "../transition";
     import type { drawTurn } from "../turn";
     
     export let state: drawTurn;
@@ -12,6 +12,7 @@ import { newSelect } from "../transition";
 
     function onSelect(event) {
         let select = newSelect(<drawTurn>state, event.detail.choices)
+        console.log(state.treasury, select.treasury)
         assertValidTransition(state, select)
         dispatch("nextTurn", select)
     }
