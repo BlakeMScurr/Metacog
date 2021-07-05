@@ -12,7 +12,6 @@
 
     function onSelect(event) {
         let select = newSelect(<drawTurn>state, event.detail.choices)
-        console.log(state.treasury, select.treasury)
         assertValidTransition(state, select)
         dispatch("nextTurn", select)
     }

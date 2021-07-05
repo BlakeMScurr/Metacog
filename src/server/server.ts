@@ -1,5 +1,6 @@
 // TODO: I should probably put this on a class or something, rather than holding the rooms as a module level variable.
 
+import { assertValidTransition } from "$lib/turn/assertions/transition";
 import { randomDraw } from "$lib/turn/transition";
 import { treasury } from "$lib/turn/treasury";
 import type { turn } from "$lib/turn/turn";
@@ -37,6 +38,7 @@ export function getRoomState(room: string):turn {
 
 export function updateRoomState(room: string, t: turn) {
     let old = rooms.get(room)
+    assertValidTransition(old.execution, t)
     rooms.set(room, { creation: old.creation, execution: t})
 }
 

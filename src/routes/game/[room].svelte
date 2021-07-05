@@ -5,6 +5,7 @@
 	import { castTurn } from '../../lib/turn/turn';
 	import type { turn } from '../../lib/turn/turn';
 	import { generateComponentMapping } from '$lib/turn/components/components';
+	import Treasury from '../../components/treasury.svelte';
 	
 	let room = ""
 	let info = "Joining room"
@@ -50,29 +51,29 @@
 	})
 
 	function updateState(event) {
-        state = event.detail
 		fetch(`/api/updateState?room=${room}&jwt=${jwt}`, {
-			method: 'POST', // *GET, POST, PUT, DELETE, etc.
-			mode: 'cors', // no-cors, *cors, same-origin
-			cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-			credentials: 'same-origin', // include, *same-origin, omit
-			headers: {
-			'Content-Type': 'application/json'
-			// 'Content-Type': 'application/x-www-form-urlencoded',
-			},
-			redirect: 'follow', // manual, *follow, error
-			referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-			body: JSON.stringify(state) // body data type must match "Content-Type" header
-		});
+			method: 'POST',
+			headers: {'Content-Type': 'application/json'},
+			body: JSON.stringify(event.detail),
+		}).then((response) => {
+			if (response.ok) {
+				state = event.detail
+			}
+		})
     }
 </script>
 
 <p>{info}</p>
 
+
 {#if !state}
 	<p>Waiting for a second player to join the room</p>
 {:else}	
+	<p>{state.explain()}</p>
+	
 	{#if makeComponent}
 		<svelte:component this={makeComponent(state).component} {...makeComponent(state).props} on:nextTurn={updateState}/>
 	{/if}
+	
+	<Treasury t={state.treasury}></Treasury>
 {/if}

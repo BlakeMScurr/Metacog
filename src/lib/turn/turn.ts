@@ -70,7 +70,7 @@ export class selectTurn {
     }
 
     explain():string {
-        return `Player ${1 + (this.turn % 2)} selected (${nouns[0]}, ${adjectives[this.selection[0]]}) and (${nouns[1]}, ${adjectives[this.selection[1]]}) for their word pairings.`
+        return `Player ${1 + (this.turn % 2)} has selected their word pairings.`
     }
 }
 
@@ -104,8 +104,8 @@ export class guessTurn {
     explain():string {
         // note that in order to find the number of the last player we add 1 rather than subtracting 1. The two are equivalent in proper modular arithmetic, but in JS
         // -1 % 2 === -1, so we have to add 1, which relies on the (correct) assumption that play always alternates each turn.
-        return `Player ${1 + ((this.turn + 1)% 2)} selected (${nouns[0]}, ${adjectives[this.selection[0]]}) and (${nouns[1]}, ${adjectives[this.selection[1]]}) for their word pairings.
-Player ${1 + (this.turn % 2)} guessed that the word pairings were (${nouns[0]}, ${adjectives[this.guess[0]]}) and (${nouns[1]}, ${adjectives[this.guess[1]]}).`
+        return `Player ${1 + ((this.turn + 1)% 2)} selected (${nouns[this.fixed[0]]}, ${adjectives[this.options[this.selection[0]]]}) and (${nouns[this.fixed[1]]}, ${adjectives[this.options[this.selection[1]]]}) for their word pairings.
+Player ${1 + (this.turn % 2)} guessed that the word pairings were (${nouns[this.fixed[0]]}, ${adjectives[this.options[this.guess[0]]]}) and (${nouns[this.fixed[1]]}, ${adjectives[this.options[this.guess[1]]]}).`
     }
 }
 
