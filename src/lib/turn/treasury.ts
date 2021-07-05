@@ -1,4 +1,4 @@
-export const startingPot = 2;
+export const startingPot = 12;
 export class treasury {
     pot: number;
     a: number;
