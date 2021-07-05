@@ -42,6 +42,10 @@ export class drawTurn {
     private wordsOf(indices: Array<number>, wordList: Array<string>):string {
         return "[" + indices.map((i) => {return `"${wordList[i]}"`}).join(", ") + "]"
     }
+
+    done():boolean {
+        return false
+    }
 }
 
 export class selectTurn {
@@ -71,6 +75,10 @@ export class selectTurn {
 
     explain():string {
         return `Player ${1 + (this.turn % 2)} has selected their word pairings.`
+    }
+
+    done():boolean {
+        return false
     }
 }
 
@@ -106,6 +114,12 @@ export class guessTurn {
         // -1 % 2 === -1, so we have to add 1, which relies on the (correct) assumption that play always alternates each turn.
         return `Player ${1 + ((this.turn + 1)% 2)} selected (${nouns[this.fixed[0]]}, ${adjectives[this.options[this.selection[0]]]}) and (${nouns[this.fixed[1]]}, ${adjectives[this.options[this.selection[1]]]}) for their word pairings.
 Player ${1 + (this.turn % 2)} guessed that the word pairings were (${nouns[this.fixed[0]]}, ${adjectives[this.options[this.guess[0]]]}) and (${nouns[this.fixed[1]]}, ${adjectives[this.options[this.guess[1]]]}).`
+    }
+
+
+    done():boolean {
+        console.log("are we done?", this.treasury.pot <= 0, this.treasury.pot)
+        return this.treasury.pot <= 0
     }
 }
 

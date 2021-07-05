@@ -75,7 +75,8 @@
 {:else}	
 	<p>{state.explain()}</p>
 	
-	{#if myTurn(state.turn + 1, isPlayerA)}
+	<!-- if state.done() we want the UI to tell us we're done -->
+	{#if myTurn(state.turn + 1, isPlayerA) || state.done()} 
 		{#if makeComponent}
 			<svelte:component this={makeComponent(state).component} {...makeComponent(state).props} on:nextTurn={updateState}/>
 		{/if}
