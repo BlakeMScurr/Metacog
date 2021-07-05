@@ -28,3 +28,7 @@ export function adjectivesOf(indices: [number, number, number]):[string, string,
 export function player(turn: number):string {
   return turn % 2 === 0 ? "A" : "B"
 }
+
+export function myTurn(turn: number, isPlayerA: boolean) {
+  return (player(turn) === "A") === isPlayerA
+}

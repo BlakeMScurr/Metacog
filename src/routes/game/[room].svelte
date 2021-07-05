@@ -6,6 +6,7 @@
 	import type { turn } from '../../lib/turn/turn';
 	import { generateComponentMapping } from '$lib/turn/components/components';
 	import Treasury from '../../components/treasury.svelte';
+	import { myTurn, player } from '$lib/util';
 	
 	let room = ""
 	let info = "Joining room"
@@ -14,6 +15,7 @@
 	let state: turn;
 	let makeComponent;
 	let jwt;
+	let isPlayerA;
 
 	page.subscribe((pg) => {
 		room = pg.params.room
@@ -25,6 +27,8 @@
 		if (result.ok) {
 			let json = await result.json()
 			jwt = json.jwt
+			isPlayerA = json.playerA
+
 			let s = new seat(jwt, json.playerA, room)
 			info = `joined room ${s.room} as player ${s.playerA ? "A" : "B"}`
 
@@ -71,8 +75,12 @@
 {:else}	
 	<p>{state.explain()}</p>
 	
-	{#if makeComponent}
-		<svelte:component this={makeComponent(state).component} {...makeComponent(state).props} on:nextTurn={updateState}/>
+	{#if myTurn(state.turn + 1, isPlayerA)}
+		{#if makeComponent}
+			<svelte:component this={makeComponent(state).component} {...makeComponent(state).props} on:nextTurn={updateState}/>
+		{/if}
+	{:else}
+		<p>Waiting for {player(state.turn)} to play</p>
 	{/if}
 	
 	<Treasury t={state.treasury}></Treasury>
