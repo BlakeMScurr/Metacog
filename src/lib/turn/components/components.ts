@@ -9,7 +9,6 @@ export async function generateComponentMapping () {
         ["draw", (await import('./draw.svelte')).default],
         ["select", (await import('./select.svelte')).default],
         ["guess", (await import('./guess.svelte')).default],
-        ["done", (await import('./done.svelte')).default],
     ])
 
     return (t: turn) => {

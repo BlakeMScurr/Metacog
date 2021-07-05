@@ -32,11 +32,6 @@ function guessToDraw(last: turn, current: turn) {
     if (!last.treasury.equals(current.treasury)) throw new Error(`The treasury can't change between guess and draw`)
 }
 
-function guessToDone(last: turn, current: turn) {
-    if (last.treasury.pot >= 2) throw new Error(`Cannot complete game while there are ${last.treasury.pot} coins to be divided up`) // Note that the pot always decrements by 2, so >=2 is equivalent to >= 0
-    if (!last.treasury.equals(current.treasury)) throw new Error(`The treasury can't change between guess and done`)
-}
-
 let transitions: Map<string, Map<string, (last: turn, current: turn) => void>> = new Map(
     [
         ["draw", new Map([
@@ -47,7 +42,6 @@ let transitions: Map<string, Map<string, (last: turn, current: turn) => void>> =
         ])],
         ["guess", new Map([
             ["draw", guessToDraw],
-            ["done", guessToDone],
         ])],
     ]
 )

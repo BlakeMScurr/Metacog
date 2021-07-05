@@ -4,7 +4,7 @@ import { assertIndexInRange, assertNaturalNumber, assertNoRepeats, assertValidCa
 import { treasury } from "./treasury";
 import { plainToClass } from "class-transformer";
 
-export type turn = drawTurn | selectTurn | guessTurn | doneTurn
+export type turn = drawTurn | selectTurn | guessTurn
 
 // A draw cards turn represents a random selection of a set of words from our two word lists
 export class drawTurn {
@@ -109,28 +109,6 @@ Player ${1 + (this.turn % 2)} guessed that the word pairings were (${nouns[this.
     }
 }
 
-export class doneTurn {
-    turn: number
-    treasury: treasury
-
-    // this just fills out the implicit interface
-    options: [number, number, number]
-    fixed: [number, number]
-    kind: string
-
-    constructor(turn: number, treasury: treasury) {
-        this.turn = turn
-        this.treasury = treasury
-        this.kind = "done"
-    }
-
-    assertValid(){}
-
-    explain():string {
-        return `The game ended with ${this.treasury.a} coins for Player 1, ${this.treasury.b} coins for Player 2, and ${this.treasury.burned()} coins burned.`
-    }
-}
-
 export function castTurn(obj):turn {
     let t: turn
     switch(obj.kind) {
@@ -142,9 +120,6 @@ export function castTurn(obj):turn {
             break
         case "guess":
             t = plainToClass(guessTurn, obj)
-            break
-        case "done":
-            t = plainToClass(doneTurn, obj)
             break
         default:
             throw new Error(`Invalid turn kind ${obj.kind}`)

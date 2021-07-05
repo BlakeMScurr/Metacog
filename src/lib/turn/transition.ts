@@ -1,6 +1,6 @@
 import { nouns } from "../nouns";
 import { adjectives } from "../adjectives";
-import { doneTurn, drawTurn, guessTurn, selectTurn } from "./turn";
+import { drawTurn, guessTurn, selectTurn } from "./turn";
 import type { treasury } from "./treasury";
 
 export function randomDraw(turnNumber: number, t: treasury):drawTurn {
@@ -35,12 +35,5 @@ export function newGuess(select: selectTurn, guess: [number, number]) {
         select.selection,
         select.fixed,
         select.options
-    )
-}
-
-export function newDone(guess: guessTurn) {
-    return new doneTurn(
-        guess.turn + 1,
-        guess.treasury,
     )
 }
