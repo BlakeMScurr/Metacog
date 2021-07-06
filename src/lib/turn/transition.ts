@@ -30,7 +30,7 @@ export function newSelect(draw: drawTurn, selection: [number, number]) {
 export function newGuess(select: selectTurn, guess: [number, number]) {
     return new guessTurn(
         select.turn + 1,
-        select.treasury.nextAllocation(select.selection, guess, select.turn% 2 === 0),
+        select.treasury.nextAllocation(select.selection, guess, select.turn% 2 === 0).allocation,
         guess,
         select.selection,
         select.fixed,
