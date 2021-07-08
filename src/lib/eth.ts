@@ -1,17 +1,42 @@
 import { ethers } from "ethers";
 
-export async function newProvider():Promise<ethers.providers.Web3Provider> {
-    if (!window.ethereum) throw new Error("No wallet connected :'(")
-    return new ethers.providers.Web3Provider(window.ethereum)
+let providerCache
+export async function ethereumProvider():Promise<ethers.providers.Web3Provider> {
+    if (!providerCache) {
+        if (!window.ethereum) throw new Error("No wallet connected :'(")
+        window.ethereum.enable()
+        providerCache = new ethers.providers.Web3Provider(window.ethereum)
+    }
+    return providerCache
 }
 
-export async function signNonce() {
-    let signer = await (await newProvider()).getSigner()
-    let response = await fetch(`api/nonce`)
-    let json = await response.json()
+export async function signAction(provider: ethers.providers.Web3Provider, a: action) {
+    let stringMessage = JSON.stringify(a)
+    let signer = await provider.getSigner()
+    return new signedAction(a, await signer.signMessage(stringMessage))
+}
+export class signedAction {
+    action: action
+    signature: string
 
-    const message = `nobotic.xyz nonce: ${json.nonce}`
-    const msgHash = ethers.utils.hashMessage(message);
-    const msgHashBytes = ethers.utils.arrayify(msgHash);
-    return {signature: await signer.signMessage(message), msgHashBytes: msgHashBytes}
+    constructor(a: action, signature: string) {
+        this.action = a
+        this.signature = signature       
+    }
+}
+
+export class action {
+    host: string
+    action: string
+    expiry: number
+    data: any
+    previous: action
+
+    constructor(action: string, previous?: action, data?: any) {
+        this.host = "nobotic.xyz"
+        this.action = action
+        this.expiry = Date.now() + 2 * 60 * 1000
+        this.data = data
+        this.previous = previous
+    }
 }

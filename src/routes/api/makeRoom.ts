@@ -1,19 +1,10 @@
-import { newStakedRoom } from "src/server/staked";
-import { newRoom } from "../../server/server";
+import { newStakedRoom } from "../../server/staked";
+import { ethers } from "ethers";
 
-export async function get({ query }) {
-    if (query.get("staked")) {
-        return {
-            body: {
-                "roomCode": newStakedRoom(query.get("address")),
-            }
-        }
-
-    } else {
-        return {
-            body: {
-                "roomCode": newRoom(),
-            }
-        };
+export async function post({ body }) {
+    let address = ethers.utils.verifyMessage(JSON.stringify(body.message), body.signature)
+    newStakedRoom(address, body)
+    return {
+        body: {}
     }
 }
