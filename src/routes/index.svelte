@@ -8,7 +8,7 @@
 
     onMount(async() => {
         let provider = await ethereumProvider()
-        myAddress = provider.getSigner().getAddress()
+        myAddress = await provider.getSigner().getAddress()
     })
 </script>
 
