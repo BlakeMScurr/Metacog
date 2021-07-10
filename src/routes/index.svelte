@@ -1,11 +1,17 @@
 <script lang="ts">
     import { goto } from "$app/navigation"
+    import { ethereumProvider } from "$lib/eth";
+    import { onMount } from "svelte";
 
-    let roomCode = ""
+    let myAddress = ""
+    let theirAddress = ""
+
+    onMount(async() => {
+        let provider = await ethereumProvider()
+        myAddress = provider.getSigner().getAddress()
+    })
 </script>
 
 <button on:click={()=>{goto("local")}}>Local Game</button>
-<button on:click={()=>{goto("challenge")}}>New Room</button>
-
-<button disabled={!roomCode} on:click={()=>{goto("game/" + roomCode)}}>Join Room</button>
-<input type="text" placeholder="Room Code" bind:value={roomCode}>
+<button disabled={!theirAddress} on:click={()=>{goto(`game?a=${myAddress}&b=${theirAddress}`)}}>Challenge</button>
+<input type="text" placeholder="Opponent's Address" bind:value={theirAddress}>
