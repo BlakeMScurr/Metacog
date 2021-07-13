@@ -6,6 +6,7 @@ import type { turn } from '../turn'
 // We impont the components here to avoid an "invalid ssr bug", the explanation of the solution is at https://github.com/sveltejs/sapper/issues/774#issuecomment-663048738
 export async function generateComponentMapping () {
     let mapping: Map<string, any> = new Map([
+        ["null", (await import('./null.svelte')).default],
         ["draw", (await import('./draw.svelte')).default],
         ["select", (await import('./select.svelte')).default],
         ["guess", (await import('./guess.svelte')).default],

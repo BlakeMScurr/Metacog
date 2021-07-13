@@ -1,18 +1,12 @@
-import * as jwt from 'jsonwebtoken';
-import { getRoomState, salt } from '../../server/server';
-
+import { getRoomState } from '../../server/server';
 
 export async function get({ query }) {
-    let room = query.get("room")
-    let token = query.get("jwt")
+    let a = query.get("a")
+    let b = query.get("b")
 
-    let decoded = jwt.verify(token, salt)
-
-    if (decoded.room === room) {
-        return {
-            body: {
-                state: JSON.stringify(getRoomState(room)),
-            }
+    return {
+        body: {
+            state: getRoomState(a + b),
         }
     }
 }

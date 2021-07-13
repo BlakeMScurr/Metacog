@@ -34,6 +34,9 @@ function guessToDraw(last: turn, current: turn) {
 
 let transitions: Map<string, Map<string, (last: turn, current: turn) => void>> = new Map(
     [
+        ["null", new Map([
+            ["draw", ()=>{}],
+        ])],
         ["draw", new Map([
             ["select", drawToSelect],
         ])],

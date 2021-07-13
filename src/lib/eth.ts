@@ -10,33 +10,8 @@ export async function ethereumProvider():Promise<ethers.providers.Web3Provider> 
     return providerCache
 }
 
-export async function signAction(provider: ethers.providers.Web3Provider, a: action) {
-    let stringMessage = JSON.stringify(a)
+export async function sign(provider: ethers.providers.Web3Provider, value: any) {
+    let stringMessage = JSON.stringify(value)
     let signer = await provider.getSigner()
-    return new signedAction(a, await signer.signMessage(stringMessage))
-}
-export class signedAction {
-    action: action
-    signature: string
-
-    constructor(a: action, signature: string) {
-        this.action = a
-        this.signature = signature       
-    }
-}
-
-export class action {
-    host: string
-    action: string
-    expiry: number
-    data: any
-    previous: action
-
-    constructor(action: string, previous?: action, data?: any) {
-        this.host = "nobotic.xyz"
-        this.action = action
-        this.expiry = Date.now() + 2 * 60 * 1000
-        this.data = data
-        this.previous = previous
-    }
+    return await signer.signMessage(stringMessage)
 }

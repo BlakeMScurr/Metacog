@@ -4,7 +4,29 @@ import { assertIndexInRange, assertNaturalNumber, assertNoRepeats, assertValidCa
 import { treasury } from "./treasury";
 import { plainToClass } from "class-transformer";
 
-export type turn = drawTurn | selectTurn | guessTurn
+export type turn = nullTurn | drawTurn | selectTurn | guessTurn
+
+// nullTurn represents that there is no game between two given addresses
+export class nullTurn {
+    turn: number;
+    kind: string;
+    treasury: treasury;
+    constructor() {
+        this.turn = 0
+        this.kind = "null"
+        this.treasury = new treasury()
+    }
+
+    assertValid() {}
+    explain():string {
+        return `There are no games between these players`
+    }
+
+    done():boolean {
+        return false
+    }
+}
+
 
 // A draw cards turn represents a random selection of a set of words from our two word lists
 export class drawTurn {
@@ -126,6 +148,9 @@ Player ${1 + (this.turn % 2)} guessed that the word pairings were (${nouns[this.
 export function castTurn(obj):turn {
     let t: turn
     switch(obj.kind) {
+        case "null":
+            t = plainToClass(nullTurn, obj)
+            break
         case "draw":
             t = plainToClass(drawTurn, obj)
             break

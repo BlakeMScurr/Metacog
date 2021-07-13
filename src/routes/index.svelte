@@ -12,6 +12,5 @@
     })
 </script>
 
-<button on:click={()=>{goto("local")}}>Local Game</button>
 <button disabled={!theirAddress} on:click={()=>{goto(`game?a=${myAddress}&b=${theirAddress}`)}}>Challenge</button>
 <input type="text" placeholder="Opponent's Address" bind:value={theirAddress}>

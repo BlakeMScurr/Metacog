@@ -1,21 +1,21 @@
 import { castTurn } from '$lib/turn/turn';
 import { myTurn, player } from '$lib/util';
-import * as jwt from 'jsonwebtoken';
-import { salt, updateRoomState } from '../../server/server';
+import { ethers } from 'ethers';
+import { updateRoomState } from '../../server/server';
 
 export async function post({ body, query }) {
-    let decoded = jwt.verify(query.get("jwt"), salt)
+    let a = query.get("a")
+    let b = query.get("b")
+    let state = body.state
 
-    console.log(`updating state as player A ${decoded.playerA}, while player of the new turn is ${player(body.turn)}`)
-    console.log(`am I updating the state? ${(player(body.turn) === "A") === decoded.playerA}`)
+    let verification = ethers.utils.verifyMessage(JSON.stringify(state), body.signature)
 
-    if (myTurn(body.turn, decoded.playerA)) {
+    if ((verification === a || verification === b) && myTurn(state.turn, verification === a)) {
         try {
-            updateRoomState(decoded.room, castTurn(body))
+            updateRoomState(a + b, castTurn(state))
             return {body: {}}
         } catch (e) {
             console.log(e)
         }
     }
-
 }
