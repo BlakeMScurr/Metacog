@@ -62,16 +62,17 @@
     <p>You are joined as an observer</p>
 {:else}
     <p>You are joined as Player {playerA?"A":"B"}</p>
-{/if}
 
-<p>{state.explain()}</p>
-
-{#if playerA !== null && (myTurn(state.turn + 1, playerA) || state.done())} <!-- if state.done() we want the UI to tell us we're done, so we need the state's component -->
-    {#if makeComponent}
-        <svelte:component this={makeComponent(state).component} {...makeComponent(state).props} on:nextTurn={updateState}/>
+    <p>{state.explain()}</p>
+    
+    {#if playerA !== null && (myTurn(state.turn + 1, playerA) || state.done())} <!-- if state.done() we want the UI to tell us we're done, so we need the state's component -->
+        {#if makeComponent}
+            <svelte:component this={makeComponent(state).component} {...makeComponent(state).props} on:nextTurn={updateState}/>
+        {/if}
+    {:else}
+        <p>Waiting for {player(state.turn + 1)}</p>
     {/if}
-{:else}
-    <p>Waiting for {player(state.turn + 1)}</p>
+    
+    <Treasury t={state.treasury}></Treasury>
 {/if}
 
-<Treasury t={state.treasury}></Treasury>
