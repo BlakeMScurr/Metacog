@@ -2,4 +2,4 @@
 node_modules
 /.svelte-kit
 /package
-**/.ethelime-store
+/src/lib/statechannel/scripts/.etherlime-store/
