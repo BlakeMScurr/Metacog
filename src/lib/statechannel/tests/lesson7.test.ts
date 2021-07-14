@@ -43,8 +43,7 @@ it("Lesson 7: Register a challenge using forceMove", async () => {
   const channel: Channel = { chainId, channelNonce, participants };
 
   /* Choose a challenger */
-  const challenger = ethers.Wallet.createRandom(); // FIXME
-  // const challenger = wallets[0];
+  const challenger = wallets[0];
 
   /* Construct a progression of states */
   const largestTurnNum = 8;
@@ -56,14 +55,13 @@ it("Lesson 7: Register a challenge using forceMove", async () => {
     channel,
     challengeDuration: 1,
     outcome: [],
-    appDefinition: process.env.TRIVIAL_APP_ADDRESS,
-    appData: HashZero,
+    appDefinition: process.env.COUNTING_APP_ADDRESS,
+    appData: ethers.utils.defaultAbiCoder.encode(['uint256'], [idx]),
   }));
 
   /* Construct a support proof */
   const whoSignedWhat = [0, 1, 2];
   const signatures = await signStates(states, wallets, whoSignedWhat);
-
   /* Form the challengeSignature */
   const challengeSignedState: SignedState = signState(
     states[states.length - 1],
@@ -77,8 +75,7 @@ it("Lesson 7: Register a challenge using forceMove", async () => {
   /* Submit the forceMove transaction */
   const variableParts = states.map((state) => getVariablePart(state));
   const fixedPart = getFixedPart(states[0]);
-
-  const tx = NitroAdjudicator.forceMove(
+  const tx = NitroAdjudicator.challenge(
     fixedPart,
     largestTurnNum,
     variableParts,
