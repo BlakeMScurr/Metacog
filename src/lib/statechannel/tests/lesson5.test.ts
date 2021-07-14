@@ -39,7 +39,7 @@ it("Lesson 5: depositing into the ETH asset holder", async () => {
       Attempt to deposit 1 wei against the channel id we created.
       Inspect the error message in the console for a hint about the bug on the next line 
   */
-  const expectedHeld = 1; // FIXME
+  const expectedHeld = 0;
   const tx0 = ETHAssetHolder.deposit(destination, expectedHeld, amount, {
     value: amount,
   });
@@ -50,7 +50,6 @@ it("Lesson 5: depositing into the ETH asset holder", async () => {
   */
   const { events } = await (await tx0).wait();
   const depositedEvent = getDepositedEvent(events);
-
   expect(await ETHAssetHolder.holdings(destination)).toEqual(amount);
   expect(depositedEvent).toMatchObject({
     destination,

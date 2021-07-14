@@ -14,14 +14,16 @@ const provider = new ethers.providers.JsonRpcProvider(
   The NitroAdjudicator contract has already been compiled and will be automatically deployed to a local blockchain.
   Import the compilation artifact so we can use the ABI to 'talk' to the deployed contract
 */
+import { TestContractArtifacts } from '@statechannels/nitro-protocol';
 const {
-  NitroAdjudicatorArtifact,
-} = require("@statechannels/nitro-protocol").ContractArtifacts;
+  TestNitroAdjudicatorArtifact,
+} = TestContractArtifacts
 const NitroAdjudicator = new ethers.Contract(
   process.env.NITRO_ADJUDICATOR_ADDRESS,
-  NitroAdjudicatorArtifact.abi,
+  TestNitroAdjudicatorArtifact.abi,
   provider.getSigner(0)
 );
+
 
 it("Lesson 2: Conform to an on chain validTransition function", async () => {
   const channel: Channel = {
@@ -45,7 +47,7 @@ it("Lesson 2: Conform to an on chain validTransition function", async () => {
   };
 
   /* Construct another state */
-  const toState: State = { ...fromState, turnNum: 1, appData: "0x1" }; // FIXME
+  const toState: State = { ...fromState, turnNum: 1, appData: "0x00" };
 
   /* 
     Check validity of transition from one state to the other

@@ -38,12 +38,12 @@ it("Lesson 6: Conclude a channel (happy)", async () => {
     wallets[i] = ethers.Wallet.createRandom();
     participants[i] = wallets[i].address;
   }
-  const chainId = "0x1234";
+  const chainId = process.env.CHAIN_ID;
   const channelNonce = 0;
   const channel: Channel = { chainId, channelNonce, participants };
   const largestTurnNum = 4;
   const state: State = {
-    isFinal: false, // FIXME
+    isFinal: true,
     channel,
     outcome: [],
     appDefinition: AddressZero,

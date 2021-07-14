@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { Channel } from "@statechannels/nitro-protocol";
+import { Channel, getChannelId } from "@statechannels/nitro-protocol";
 
 it("Lesson 4: construct a Channel and compute its id", async () => {
   /*
@@ -22,15 +22,13 @@ it("Lesson 4: construct a Channel and compute its id", async () => {
     */
   const channelNonce = 0;
 
-  const channelId = "fixme"; // FIX ME
-
   /* 
       Uncomment the lines below to use the imported helper function to compute the channel id.
       Feel free to take a look at the implementation of that helper 
     */
 
   const channel: Channel = { chainId, channelNonce, participants };
-  // const channelId = getChannelId(channel);
+  const channelId = getChannelId(channel);
 
   /* 
       Expectations around the format of the channel Id:

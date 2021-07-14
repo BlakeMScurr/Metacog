@@ -38,7 +38,7 @@ it("Lesson 7: Register a challenge using forceMove", async () => {
     wallets[i] = ethers.Wallet.createRandom();
     participants[i] = wallets[i].address;
   }
-  const chainId = "0x1234";
+  const chainId = process.env.CHAIN_ID;
   const channelNonce = 0;
   const channel: Channel = { chainId, channelNonce, participants };
 

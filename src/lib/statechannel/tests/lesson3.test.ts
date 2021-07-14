@@ -37,7 +37,8 @@ it("Lesson 3: Support a state with signatures", async () => {
     wallets[i] = ethers.Wallet.createRandom();
     participants[i] = wallets[i].address;
   }
-  const chainId = "0x1234";
+  const chainId = process.env.CHAIN_ID
+  // const chainId = ethers.BigNumber.from(1337).toHexString();
   const channelNonce = 0;
   const channel: Channel = { chainId, channelNonce, participants };
 
@@ -60,7 +61,6 @@ it("Lesson 3: Support a state with signatures", async () => {
   /* Sign the states */
   const whoSignedWhat = [0, 1, 2];
   const sigs = await signStates(states, wallets, whoSignedWhat);
-  sigs.reverse(); // FIXME
 
   /*
    * Use the checkpoint method to test our signatures
