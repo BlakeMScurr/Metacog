@@ -15,7 +15,7 @@ import {
   signChallengeMessage,
   channelDataToChannelStorageHash,
 } from "@statechannels/nitro-protocol";
-import { ChannelData } from "@statechannels/nitro-protocol/lib/src/contract/channel-storage";
+import type { ChannelData } from "@statechannels/nitro-protocol/lib/src/contract/channel-storage";
 
 /* Set up an ethereum provider connected to our local blockchain */
 const provider = new ethers.providers.JsonRpcProvider(
@@ -45,22 +45,28 @@ it("Lesson 8: Clear a challenge using checkpoint", async () => {
     wallets[i] = ethers.Wallet.createRandom();
     participants[i] = wallets[i].address;
   }
-  const chainId = "0x1234";
+
+  const chainId = process.env.CHAIN_ID;
   const challengeDuration = 1e12; // a long time in the future
   const channelNonce = 0;
   const channel: Channel = { chainId, channelNonce, participants };
   const channelId = getChannelId(channel);
   let appDatas = [0, 1, 2];
   let whoSignedWhat = [0, 1, 2];
-  let states: State[] = appDatas.map((data, idx) => ({
-    turnNum: largestTurnNum - appDatas.length + 1 + idx,
-    isFinal: idx > appDatas.length - isFinalCount,
-    channel,
-    challengeDuration,
-    outcome: [],
-    appDefinition: process.env.TRIVIAL_APP_ADDRESS,
-    appData: HashZero,
-  }));
+  let states: State[] = appDatas.map((data, idx) => 
+    {
+      let turnNum = largestTurnNum - appDatas.length + 1 + idx
+      return {
+        turnNum: turnNum,
+        isFinal: idx > appDatas.length - isFinalCount,
+        channel,
+        challengeDuration,
+        outcome: [],
+        appDefinition: process.env.COUNTING_APP_ADDRESS,
+        appData: ethers.utils.defaultAbiCoder.encode(['uint256'], [turnNum]),
+      }
+    }
+  );
   let variableParts = states.map((state) => getVariablePart(state));
   let fixedPart = getFixedPart(states[0]);
   const challenger = wallets[0];
@@ -74,7 +80,7 @@ it("Lesson 8: Clear a challenge using checkpoint", async () => {
     challenger.privateKey
   );
   await (
-    await NitroAdjudicator.forceMove(
+    await NitroAdjudicator.challenge(
       fixedPart,
       largestTurnNum,
       variableParts,
@@ -88,18 +94,21 @@ it("Lesson 8: Clear a challenge using checkpoint", async () => {
   /* BEGIN Lesson 8 proper */
 
   /* Form a progression of states */
-  const numRounds = 2; // FIXME
+  const numRounds = 3; // FIXME
   largestTurnNum = 3 * numRounds;
   appDatas = [largestTurnNum - 2, largestTurnNum - 1, largestTurnNum];
-  states = appDatas.map((data, idx) => ({
-    turnNum: largestTurnNum - appDatas.length + 1 + idx,
-    isFinal: false,
-    channel,
-    challengeDuration,
-    outcome: [],
-    appDefinition: process.env.TRIVIAL_APP_ADDRESS,
-    appData: HashZero,
-  }));
+  states = appDatas.map((data, idx) => {
+    let turnNum = largestTurnNum - appDatas.length + 1 + idx
+    return {
+      turnNum: turnNum,
+      isFinal: false,
+      channel,
+      challengeDuration,
+      outcome: [],
+      appDefinition: process.env.COUNTING_APP_ADDRESS,
+      appData: ethers.utils.defaultAbiCoder.encode(['uint256'], [turnNum]),
+    }
+  });
   whoSignedWhat = [2, 0, 1];
   signatures = await signStates(states, wallets, whoSignedWhat);
 
@@ -112,9 +121,11 @@ it("Lesson 8: Clear a challenge using checkpoint", async () => {
     signatures,
     whoSignedWhat
   );
+  console.log("at checkpoint")
 
   await (await tx).wait();
 
+  console.log("past checkpoint")
   /* 
     Form an expectation about the new state of the chain:
   */
