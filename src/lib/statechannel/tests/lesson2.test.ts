@@ -9,6 +9,7 @@ const provider = new ethers.providers.JsonRpcProvider(
   `http://localhost:${process.env.GANACHE_PORT}`
 );
 
+
 /* 
   The NitroAdjudicator contract has already been compiled and will be automatically deployed to a local blockchain.
   Import the compilation artifact so we can use the ABI to 'talk' to the deployed contract
@@ -39,7 +40,7 @@ it("Lesson 2: Conform to an on chain validTransition function", async () => {
     turnNum: 0,
     isFinal: false,
     challengeDuration: 0x0,
-    appDefinition: process.env.TRIVIAL_APP_ADDRESS,
+    appDefinition: process.env.COUNTING_APP_ADDRESS,
     appData: "0x00",
   };
 
