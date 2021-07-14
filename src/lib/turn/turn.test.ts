@@ -31,7 +31,7 @@ test("randomDraw", () => {
 // select turn tests
 test("selectTurn.explain", () => {
     expect(new selectTurn(0, new treasury(), [0, 1], [0, 1], [0, 1, 2]).explain()).toBe(
-        "Player 1 selected (people, abandoned) and (history, able) for their word pairings."
+        "Player 1 has selected their word pairings."
     )
 })
 
@@ -39,6 +39,7 @@ test("selectTurn.explain", () => {
 test("guessTurn.explain", () => {
     expect(new guessTurn(0, new treasury(), [0, 1], [0, 1], [0, 1], [0, 1, 2]).explain()).toBe(
 `Player 2 selected (people, abandoned) and (history, able) for their word pairings.
-Player 1 guessed that the word pairings were (people, abandoned) and (history, able).`
+Player 1 guessed that the word pairings were (people, abandoned) and (history, able).
+The players agreed on both word pairs so they split the coins.`
     )
 })

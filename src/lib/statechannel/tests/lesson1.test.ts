@@ -51,7 +51,7 @@ it("Lesson 1: Form a State with the correct format", async () => {
   /* Putting it all together */
   const state: State = {
     turnNum: 0,
-    isFinal: true, // FIXME
+    isFinal: false,
     channel,
     challengeDuration,
     outcome,
