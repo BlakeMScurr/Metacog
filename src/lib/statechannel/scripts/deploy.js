@@ -1,1 +1,2 @@
-require('./deploymod').deploy()
+import { deploy } from './deploymod.js'
+deploy()
