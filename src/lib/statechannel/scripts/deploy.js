@@ -1,2 +1,4 @@
 import { deploy } from './deploymod.js'
-deploy()
+deploy().then((addreses) => {
+    console.log(addreses)
+})

@@ -24,11 +24,11 @@ export async function deploy() {
     NITRO_ADJUDICATOR_ADDRESS
   );
 
-  const TRIVIAL_APP_ADDRESS = await deployer.deploy(CountingAppArtifact);
+  const COUNTING_APP_ADDRESS = await deployer.deploy(CountingAppArtifact);
 
   return {
-    NITRO_ADJUDICATOR_ADDRESS,
-    ETH_ASSET_HOLDER_ADDRESS,
-    TRIVIAL_APP_ADDRESS,
+    "NITRO_ADJUDICATOR_ADDRESS": NITRO_ADJUDICATOR_ADDRESS,
+    "ETH_ASSET_HOLDER_ADDRESS": ETH_ASSET_HOLDER_ADDRESS,
+    "COUNTING_APP_ADDRESS": COUNTING_APP_ADDRESS,
   };
 };
